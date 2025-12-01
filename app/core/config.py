@@ -17,19 +17,21 @@ class Settings(BaseSettings):
     # Database
     POSTGRES_SERVER: str = os.getenv("POSTGRES_SERVER", "localhost")
     POSTGRES_USER: str = os.getenv("POSTGRES_USER", "postgres")
-    POSTGRES_PASSWORD: str = os.getenv("POSTGRES_PASSWORD", "1234")  # Изменил на 1234
+    POSTGRES_PASSWORD: str = os.getenv("POSTGRES_PASSWORD", "1234")  
     POSTGRES_DB: str = os.getenv("POSTGRES_DB", "english_learning")
     POSTGRES_PORT: str = os.getenv("POSTGRES_PORT", "5432")
     
     @property
     def DATABASE_URL(self) -> str:
-        # Используем pg8000 (как в работающей версии)
+        # Используем pg8000 
         return f"postgresql+pg8000://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_SERVER}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
 
     # JWT
     SECRET_KEY: str = os.getenv("SECRET_KEY", "fallback-secret-key-change-in-production")
     ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 15  
+    REFRESH_TOKEN_EXPIRE_DAYS: int = 30
+    REFRESH_SECRET_KEY: str = os.getenv("REFRESH_SECRET_KEY", "fallback-refresh-secret-key-change-in-production")
     
     class Config:
         env_file = ".env"

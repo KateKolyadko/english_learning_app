@@ -1,9 +1,14 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.core.limiter import limiter
+from slowapi.errors import RateLimitExceeded
+from slowapi import _rate_limit_exceeded_handler
+
 from app.core.config import settings
 from app.core.database import Base, engine
 from app.models.user import User
+
 
 # Импортируем роутеры
 from app.api.v1.endpoints.auth import router as auth_router
@@ -13,6 +18,9 @@ app = FastAPI(
     version=settings.VERSION,
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
 )
+
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # Создаем таблицы при запуске
 @app.on_event("startup")
