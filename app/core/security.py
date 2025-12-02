@@ -58,10 +58,9 @@ def create_refresh_token(data: dict) -> str:
         "type": "refresh"  
     })
     
-
     encoded_jwt = jwt.encode(
         to_encode, 
-        settings.SECRET_KEY, 
+        settings.REFRESH_SECRET_KEY, 
         algorithm=settings.ALGORITHM
     )
     return encoded_jwt
@@ -71,7 +70,7 @@ def verify_refresh_token(token: str) -> Dict:
     try:
         payload = jwt.decode(
             token,
-            settings.SECRET_KEY, 
+            settings.REFRESH_SECRET_KEY, 
             algorithms=[settings.ALGORITHM]
         )
 
